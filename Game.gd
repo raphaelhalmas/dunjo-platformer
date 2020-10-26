@@ -4,12 +4,13 @@ const LVL_PATH = "res://Levels/Level%d.tscn"
 
 var _level_number:int = 1
 
-func init():
-	add_to_group("pickup_listeners")
-	load_level(_level_number)
-
 func _ready():
+	add_to_group("pickup_listeners")
 	call_deferred("init") 
+
+func init():
+#	add_to_group("pickup_listeners")
+	load_level(_level_number)
 	
 func load_level(level_number:int):
 	var root = get_tree().root
@@ -24,3 +25,5 @@ func load_level(level_number:int):
 # The game gets notified anytime one of those items is picked up
 func on_pickup(item):
 	print(item.name)
+	if item.name == "Key":
+		get_tree().call_group("triggerable", "trigger", "Door")
