@@ -31,6 +31,6 @@ func _on_next_level():
 
 # The game gets notified anytime one of those items is picked up
 func _on_pickup(item):
-	print(item.name)
+#	print(item.name)
 	if item.name == "Key":
 		get_tree().call_group("triggerable", "trigger", "Door")

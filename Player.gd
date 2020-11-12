@@ -18,7 +18,9 @@ var last_y := 0.0
 var fall_time := 0.0
 
 func _ready():
-	pass # Replace with function body.
+	# Allows the 1st call to is_on_floor() to work correctly 
+# warning-ignore:return_value_discarded
+	move_and_slide(velocity, Vector2.UP, true)
 
 func _process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -40,6 +42,13 @@ func _process(delta):
 			pass
 		LAND:
 #			print("fell: %f" % (global_position.y - last_y))
+#			So if only our dust timer is finished
+#			We are going to emit a particle
+			if $DustTimer.is_stopped():
+				$FootDust.emitting = true
+#				We want the dust timer
+#				We want to start it
+				$DustTimer.start($FootDust.lifetime + 0.2)  				
 			fall_time = 0
 			state = NORMAL
 			pass
