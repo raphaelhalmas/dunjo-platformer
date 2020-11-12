@@ -6,5 +6,5 @@ func _ready():
 	
 func _on_player_entered(_body):
 #	print(body.name)
-	get_tree().call_group("pickup_listeners", "on_pickup", self)
+	get_tree().call_group("game", "_on_pickup", self)
 	queue_free()
