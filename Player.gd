@@ -93,6 +93,11 @@ func vertical():
 		velocity.y = 0.75 * speed
 	else: 
 		velocity.y = 0
+		
+	if velocity.y == 0:
+		$Animation.play("ClimbIdle")
+	else:
+		$Animation.play("Climb")
 
 func jump():
 	if air_control:
@@ -136,8 +141,7 @@ func on_interact_entered(obj_pos: Vector2, type):
 #   when we come into the climb of vine state
 	if state == JUMP:		
 		state = CLIMB_CHAIN
-		global_position.x = obj_pos.x
-		$Animation.play("Idle")
+		global_position.x = obj_pos.x		
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
@@ -145,3 +149,9 @@ func on_interact_exited(obj_pos: Vector2, type):
 # warning-ignore:narrowing_conversion	
 #   I don't want to go below zero
 	vines = max(0, vines - 1)
+	
+#	So what needs to happen is whenever he gets off of that
+#   He should go to the fall state
+	if vines ==0 && state == CLIMB_CHAIN:
+		$Animation.play("Idle")
+		state = FALL	
