@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-enum { DIE, FALL, JUMP, LAND, NORMAL }
+enum { CLIMB_CHAIN, DIE, FALL, JUMP, LAND, NORMAL }
 const GRAVITY := 800
 const JUMP_VELOCITY := -200
 const AIR_JUMP_MULT := 0.75
@@ -27,6 +27,8 @@ func _process(delta):
 		get_tree().quit()
 		
 	match state:
+		CLIMB_CHAIN:
+			climb_chain()
 		DIE:
 			pass
 		FALL:
@@ -39,7 +41,6 @@ func _process(delta):
 			fall_time += delta
 		JUMP:
 			jump()
-			pass
 		LAND:
 #			print("fell: %f" % (global_position.y - last_y))
 #			So if only our dust timer is finished
@@ -65,7 +66,8 @@ func _process(delta):
 					jump()
 
 func _physics_process(delta):
-	velocity.y += GRAVITY * delta
+	if state != CLIMB_CHAIN:
+		velocity.y += GRAVITY * delta
 	velocity = move_and_slide(velocity, Vector2.UP, true)
 
 func horizontal():
@@ -83,6 +85,14 @@ func horizontal():
 			$Animation.play("Idle")
 		else:
 			$Animation.play("Walk")
+
+func vertical():
+	if Input.is_action_pressed("Up"):
+		velocity.y = -speed / 2.0
+	elif Input.is_action_pressed("Down"):
+		velocity.y = 0.75 * speed
+	else: 
+		velocity.y = 0
 
 func jump():
 	if air_control:
@@ -112,3 +122,26 @@ func jump():
 #	to make sure that we're actually falling or have fallen
 	elif is_on_floor() and velocity.y >= 0:
 		state = LAND
+
+func climb_chain():
+	velocity.x = 0
+	vertical()
+
+var vines := 0
+
+# warning-ignore:unused_argument
+func on_interact_entered(obj_pos: Vector2, type):
+	vines += 1
+#   We're going to snap our player to that x coordinate 
+#   when we come into the climb of vine state
+	if state == JUMP:		
+		state = CLIMB_CHAIN
+		global_position.x = obj_pos.x
+		$Animation.play("Idle")
+
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
+func on_interact_exited(obj_pos: Vector2, type):
+# warning-ignore:narrowing_conversion	
+#   I don't want to go below zero
+	vines = max(0, vines - 1)
