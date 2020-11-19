@@ -1,6 +1,6 @@
 extends Area2D
 
-enum InteractType {NONE, CHAIN, LADDER}
+const InteractType = preload("res://Commons/GlobalEnums.gd").InteractType
 
 export(int) var type = InteractType.NONE
 

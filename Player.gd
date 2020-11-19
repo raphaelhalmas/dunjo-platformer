@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
-enum { CLIMB_CHAIN, DIE, FALL, JUMP, LAND, NORMAL }
+const InteractType = preload("res://Commons/GlobalEnums.gd").InteractType
+const PlayerState = preload("res://Commons/GlobalEnums.gd").PlayerState
+
 const GRAVITY := 800
 const JUMP_VELOCITY := -200
 const AIR_JUMP_MULT := 0.75
@@ -12,36 +14,40 @@ export var speed := 65
 export var air_control := true
 export var max_air_jumps := 1
 
-var state := NORMAL
-var air_jumps := 0 
+var state: int = PlayerState.NORMAL
+var prev_state: int = PlayerState.NORMAL
+var air_jumps := 0
 var last_y := 0.0
 var fall_time := 0.0
+var vines := 0
 
 func _ready():
 	# Allows the 1st call to is_on_floor() to work correctly 
-# warning-ignore:return_value_discarded
-	move_and_slide(velocity, Vector2.UP, true)
+	velocity = move_and_slide(velocity, Vector2.UP, true)
 
 func _process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
 		
 	match state:
-		CLIMB_CHAIN:
+		PlayerState.CLIMB_CHAIN:
 			climb_chain()
-		DIE:
+			
+		PlayerState.DIE:
 			pass
-		FALL:
+			
+		PlayerState.FALL:
 			if is_on_floor():
-				state = LAND
+				change_state(PlayerState.LAND)
 			elif fall_time <= MIN_FALL_JUMP_TIME:
 				air_jumps = max_air_jumps
 				jump()
-			
 			fall_time += delta
-		JUMP:
+			
+		PlayerState.JUMP:
 			jump()
-		LAND:
+			
+		PlayerState.LAND:
 #			print("fell: %f" % (global_position.y - last_y))
 #			So if only our dust timer is finished
 #			We are going to emit a particle
@@ -51,22 +57,23 @@ func _process(delta):
 #				We want to start it
 				$DustTimer.start($FootDust.lifetime + 0.2)  				
 			fall_time = 0
-			state = NORMAL
+			change_state(PlayerState.NORMAL)
 			pass
-		NORMAL:
+			
+		PlayerState.NORMAL:
 			if !is_on_floor():
-				state = FALL
+				change_state(PlayerState.FALL)
 				last_y = global_position.y
-			else:				
+			else:
 				horizontal()
 				
 				if Input.is_action_just_pressed("Jump"):
 					air_jumps = max_air_jumps
-					state = JUMP
+					change_state(PlayerState.JUMP)
 					jump()
 
 func _physics_process(delta):
-	if state != CLIMB_CHAIN:
+	if state != PlayerState.CLIMB_CHAIN:
 		velocity.y += GRAVITY * delta
 	velocity = move_and_slide(velocity, Vector2.UP, true)
 
@@ -99,14 +106,19 @@ func vertical():
 	else:
 		$Animation.play("Climb")
 
+func change_state(new_state: int):
+	print("Change state from %d to %d" % [state, new_state])
+	prev_state = state
+	state = new_state
+
 func jump():
 	if air_control:
 		horizontal()
 		
 #	We have one jump and that would be just on the floor
-	if Input.is_action_just_pressed("Jump") and air_jumps >= 0:
+	if Input.is_action_just_pressed("Jump") && air_jumps >= 0:
 		$Animation.play("Jump")
-		state = JUMP
+		change_state(PlayerState.JUMP)
 		
 #		We want to check if this is the first jump
 #		If we just now jumped that must mean we're on the floor
@@ -125,33 +137,30 @@ func jump():
 #	If the jump key wasn't pressed of if we don't have any jumps
 #	We want to check our velocity is greater than or equal to zero 
 #	to make sure that we're actually falling or have fallen
-	elif is_on_floor() and velocity.y >= 0:
-		state = LAND
+	elif is_on_floor() && velocity.y >= 0:
+		change_state(PlayerState.LAND)
 
 func climb_chain():
 	velocity.x = 0
 	vertical()
-
-var vines := 0
 
 # warning-ignore:unused_argument
 func on_interact_entered(obj_pos: Vector2, type):
 	vines += 1
 #   We're going to snap our player to that x coordinate 
 #   when we come into the climb of vine state
-	if state == JUMP:		
-		state = CLIMB_CHAIN
-		global_position.x = obj_pos.x		
+	if state == PlayerState.JUMP:
+		state = PlayerState.CLIMB_CHAIN
+		global_position.x = obj_pos.x
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func on_interact_exited(obj_pos: Vector2, type):
-# warning-ignore:narrowing_conversion	
+func on_interact_exited(obj_pos: Vector2, type):	
 #   I don't want to go below zero
-	vines = max(0, vines - 1)
+	vines = int(max(0, vines - 1))
 	
 #	So what needs to happen is whenever he gets off of that
 #   He should go to the fall state
-	if vines ==0 && state == CLIMB_CHAIN:
+	if vines == 0 && state == PlayerState.CLIMB_CHAIN:
 		$Animation.play("Idle")
-		state = FALL	
+		change_state(PlayerState.FALL)
