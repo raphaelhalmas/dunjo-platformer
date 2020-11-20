@@ -20,6 +20,7 @@ var air_jumps := 0
 var last_y := 0.0
 var fall_time := 0.0
 var vines := 0
+var last_vine_x := 0
 
 func _ready():
 	# Allows the 1st call to is_on_floor() to work correctly 
@@ -66,7 +67,6 @@ func _process(delta):
 				last_y = global_position.y
 			else:
 				horizontal()
-				
 				if Input.is_action_just_pressed("Jump"):
 					air_jumps = max_air_jumps
 					change_state(PlayerState.JUMP)
@@ -115,7 +115,6 @@ func jump():
 #	We have one jump and that would be just on the floor
 	if Input.is_action_just_pressed("Jump") && air_jumps >= 0:
 		$Animation.play("Jump")
-		change_state(PlayerState.JUMP)
 		
 #		We want to check if this is the first jump
 #		If we just now jumped that must mean we're on the floor
@@ -155,9 +154,14 @@ func on_interact_entered(obj_pos: Vector2, type):
 #   If we're climbing the chain before 
 #   We do not want to go back into the climbing state again
 #   We should be able to press the jump button and let go the chain
-	if state == PlayerState.JUMP && prev_state != PlayerState.CLIMB_CHAIN:
-		change_state(PlayerState.CLIMB_CHAIN)
+#	We do not want to jump to the same chain
+#   We want to be able to let it go and jump from that one to another one
+#   Now we can actually jump in the air from one vine to another
+#   and we immediately stick to it  
+	if state == PlayerState.JUMP && ( prev_state != PlayerState.CLIMB_CHAIN || last_vine_x != obj_pos.x ):
+		last_vine_x = int(obj_pos.x)
 		global_position.x = obj_pos.x
+		change_state(PlayerState.CLIMB_CHAIN)
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
