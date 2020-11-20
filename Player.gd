@@ -100,14 +100,11 @@ func vertical():
 		velocity.y = 0.75 * speed
 	else: 
 		velocity.y = 0
-		
-	if velocity.y == 0:
-		$Animation.play("ClimbIdle")
-	else:
-		$Animation.play("Climb")
+
+	$Animation.play("Idle")
 
 func change_state(new_state: int):
-	print("Change state from %d to %d" % [state, new_state])
+#	print("Change state from %d to %d" % [state, new_state])
 	prev_state = state
 	state = new_state
 
@@ -143,14 +140,23 @@ func jump():
 func climb_chain():
 	velocity.x = 0
 	vertical()
+	if Input.is_action_just_pressed("Jump"):
+		air_jumps = max_air_jumps
+		horizontal()
+		change_state(PlayerState.JUMP)
+		if velocity.x != 0:
+			jump()	
 
 # warning-ignore:unused_argument
 func on_interact_entered(obj_pos: Vector2, type):
 	vines += 1
 #   We're going to snap our player to that x coordinate 
 #   when we come into the climb of vine state
-	if state == PlayerState.JUMP:
-		state = PlayerState.CLIMB_CHAIN
+#   If we're climbing the chain before 
+#   We do not want to go back into the climbing state again
+#   We should be able to press the jump button and let go the chain
+	if state == PlayerState.JUMP && prev_state != PlayerState.CLIMB_CHAIN:
+		change_state(PlayerState.CLIMB_CHAIN)
 		global_position.x = obj_pos.x
 
 # warning-ignore:unused_argument
