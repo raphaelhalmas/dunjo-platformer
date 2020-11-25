@@ -31,8 +31,8 @@ func setup_tiles():
 				create_instance_from_tilemap(cell, door, $Triggerables, Vector2(6, 6))
 			KEY:
 				create_instance_from_tilemap(cell, key, $Items, Vector2(6, 6))
-#			LADDER:
-#				create_instance_from_tilemap(cell, ladder, $Triggerables, Vector2(6, 6))
+			LADDER:
+				create_instance_from_tilemap(cell, ladder, $Interactables, Vector2(6, 6))
 			PLAYER:
 				create_instance_from_tilemap(cell, player, self, Vector2(6, 12))
 				

@@ -19,8 +19,10 @@ var prev_state: int = PlayerState.NORMAL
 var air_jumps := 0
 var last_y := 0.0
 var fall_time := 0.0
-var vines := 0
-var last_vine_x := 0
+
+# Number of climbables the player is hanging onto at any given time
+var climbables := 0
+var last_climbable_x := 0.0
 
 func _ready():
 	# Allows the 1st call to is_on_floor() to work correctly 
@@ -31,8 +33,12 @@ func _process(delta):
 		get_tree().quit()
 		
 	match state:
-		PlayerState.CLIMB_CHAIN:
-			climb_chain()
+		PlayerState.CLIMB:
+			climb()
+#			That way you can get off of any vine or ladder that touches the ground
+#			I just want to make sure that we come off like that
+			if is_on_floor() && velocity.y > 0:
+				change_state(PlayerState.NORMAL)
 			
 		PlayerState.DIE:
 			pass
@@ -71,9 +77,16 @@ func _process(delta):
 					air_jumps = max_air_jumps
 					change_state(PlayerState.JUMP)
 					jump()
+				elif climbables > 0:
+					vertical()
+#					If the player is trying to go up
+#					That will should allows us to climb
+					if velocity.y < 0:
+#						global_position.x = last_climbable_x
+						change_state(PlayerState.CLIMB)
 
 func _physics_process(delta):
-	if state != PlayerState.CLIMB_CHAIN:
+	if state != PlayerState.CLIMB:
 		velocity.y += GRAVITY * delta
 	velocity = move_and_slide(velocity, Vector2.UP, true)
 
@@ -101,7 +114,8 @@ func vertical():
 	else: 
 		velocity.y = 0
 
-	$Animation.play("Idle")
+	if state == PlayerState.CLIMB:	
+		$Animation.play("Idle")
 
 func change_state(new_state: int):
 #	print("Change state from %d to %d" % [state, new_state])
@@ -136,7 +150,7 @@ func jump():
 	elif is_on_floor() && velocity.y >= 0:
 		change_state(PlayerState.LAND)
 
-func climb_chain():
+func climb():
 	velocity.x = 0
 	vertical()
 	if Input.is_action_just_pressed("Jump"):
@@ -146,9 +160,7 @@ func climb_chain():
 		if velocity.x != 0:
 			jump()	
 
-# warning-ignore:unused_argument
-func on_interact_entered(obj_pos: Vector2, type):
-	vines += 1
+func on_interact_entered(obj_pos: Vector2, type):	
 #   We're going to snap our player to that x coordinate 
 #   when we come into the climb of vine state
 #   If we're climbing the chain before 
@@ -158,19 +170,23 @@ func on_interact_entered(obj_pos: Vector2, type):
 #   We want to be able to let it go and jump from that one to another one
 #   Now we can actually jump in the air from one vine to another
 #   and we immediately stick to it  
-	if state == PlayerState.JUMP && ( prev_state != PlayerState.CLIMB_CHAIN || last_vine_x != obj_pos.x ):
-		last_vine_x = int(obj_pos.x)
-		global_position.x = obj_pos.x
-		change_state(PlayerState.CLIMB_CHAIN)
+	if type == InteractType.CHAIN || type == InteractType.LADDER:
+		climbables += 1		
+
+		if state == PlayerState.JUMP && ( prev_state != PlayerState.CLIMB || last_climbable_x != obj_pos.x ):						
+			global_position.x = obj_pos.x
+			change_state(PlayerState.CLIMB)
+			
+		last_climbable_x = obj_pos.x
 
 # warning-ignore:unused_argument
-# warning-ignore:unused_argument
 func on_interact_exited(obj_pos: Vector2, type):	
-#   I don't want to go below zero
-	vines = int(max(0, vines - 1))
+	if type == InteractType.CHAIN || type == InteractType.LADDER:
+#   	I don't want to go below zero
+		climbables = int(max(0, climbables - 1))
 	
-#	So what needs to happen is whenever he gets off of that
-#   He should go to the fall state
-	if vines == 0 && state == PlayerState.CLIMB_CHAIN:
-		$Animation.play("Idle")
-		change_state(PlayerState.FALL)
+#		So what needs to happen is whenever he gets off of that
+#   	He should go to the fall state
+		if climbables == 0 && state == PlayerState.CLIMB:
+			$Animation.play("Idle")
+			change_state(PlayerState.FALL)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://DungeonTileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Levels/Level.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Pickups/Coin.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Triggerables/Door.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Interactables/Chain.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Interactables/Ladder.tscn" type="PackedScene" id=8]
 
 [node name="BaseLevel" type="Node2D"]
 script = ExtResource( 2 )
@@ -14,6 +15,7 @@ coin = ExtResource( 5 )
 chain = ExtResource( 7 )
 door = ExtResource( 6 )
 key = ExtResource( 4 )
+ladder = ExtResource( 8 )
 player = ExtResource( 3 )
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -25,3 +27,5 @@ tile_data = PoolIntArray( 0, 0, 131075, 1, 0, 4, 2, 0, 4, 3, 0, 4, 4, 0, 4, 5, 0
 [node name="Items" type="Node2D" parent="."]
 
 [node name="Triggerables" type="Node2D" parent="."]
+
+[node name="Interactables" type="Node2D" parent="."]

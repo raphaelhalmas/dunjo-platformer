@@ -7,7 +7,7 @@ enum InteractType {
 }
 
 enum PlayerState { 
-	CLIMB_CHAIN, 
+	CLIMB, 
 	DIE, 
 	FALL, 
 	JUMP, 
