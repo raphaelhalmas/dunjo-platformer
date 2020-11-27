@@ -1,17 +1,19 @@
 extends Node2D
 
-const CHAIN := 5
-const COIN := 4
-const DOOR := 9
+const CHAIN := 11
+const COIN := 7
+const DOOR := 4
 const KEY := 2
-const LADDER := 3
-const PLAYER := 11
+const LADDER := 12
+const LADDER_TOP := 13
+const PLAYER := 5
 
 export (PackedScene) var coin
 export (PackedScene) var chain
 export (PackedScene) var door
 export (PackedScene) var key
 export (PackedScene) var ladder
+export (PackedScene) var ladder_top
 export (PackedScene) var player
 
 func _ready():
@@ -33,6 +35,8 @@ func setup_tiles():
 				create_instance_from_tilemap(cell, key, $Items, Vector2(6, 6))
 			LADDER:
 				create_instance_from_tilemap(cell, ladder, $Interactables, Vector2(6, 6))
+			LADDER_TOP:
+				create_instance_from_tilemap(cell, ladder, $Interactables, Vector2(6, 6))				
 			PLAYER:
 				create_instance_from_tilemap(cell, player, self, Vector2(6, 12))
 				

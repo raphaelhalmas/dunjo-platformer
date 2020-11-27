@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/smoke.png-ed46ab443a557dc8376763b436014e91.stex"
+path="res://.import/dunjo.png-f57413c1a88f8c1d7dcd99dd3deeaac0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GFX/smoke.png"
-dest_files=[ "res://.import/smoke.png-ed46ab443a557dc8376763b436014e91.stex" ]
+source_file="res://GFX/dunjo.png"
+dest_files=[ "res://.import/dunjo.png-f57413c1a88f8c1d7dcd99dd3deeaac0.stex" ]
 
 [params]
 

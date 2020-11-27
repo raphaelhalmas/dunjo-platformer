@@ -58,11 +58,11 @@ func _process(delta):
 #			print("fell: %f" % (global_position.y - last_y))
 #			So if only our dust timer is finished
 #			We are going to emit a particle
-			if $DustTimer.is_stopped():
-				$FootDust.emitting = true
-#				We want the dust timer
-#				We want to start it
-				$DustTimer.start($FootDust.lifetime + 0.2)  				
+#			if $DustTimer.is_stopped():
+#				$FootDust.emitting = true
+##				We want the dust timer
+##				We want to start it
+#				$DustTimer.start($FootDust.lifetime + 0.2)  				
 			fall_time = 0
 			change_state(PlayerState.NORMAL)
 			pass

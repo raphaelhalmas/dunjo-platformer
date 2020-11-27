@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dunjo_modified.png-8a56e4c75196fe21693c8d16b64a251c.stex"
+path="res://.import/dunjo_modified.png-76d8d0c4df90db298e793adcb1cface1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gfx/dunjo_modified.png"
-dest_files=[ "res://.import/dunjo_modified.png-8a56e4c75196fe21693c8d16b64a251c.stex" ]
+source_file="res://GFX/dunjo_modified.png"
+dest_files=[ "res://.import/dunjo_modified.png-76d8d0c4df90db298e793adcb1cface1.stex" ]
 
 [params]
 
