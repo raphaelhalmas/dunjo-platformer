@@ -10,7 +10,7 @@ extents = Vector2( 2.23449, 5.73938 )
 script = ExtResource( 2 )
 
 [node name="Sprite" parent="." index="0"]
-frame = 28
+frame = 148
 
 [node name="Collision" parent="." index="1"]
 shape = SubResource( 1 )

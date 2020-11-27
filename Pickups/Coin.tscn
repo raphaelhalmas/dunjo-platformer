@@ -19,13 +19,13 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 32, 33, 34, 35, 36 ]
+"values": [ 135, 133, 134, 135, 136 ]
 }
 
 [node name="Coin" instance=ExtResource( 1 )]
 
 [node name="Sprite" parent="." index="0"]
-frame = 35
+frame = 134
 
 [node name="Collision" parent="." index="1"]
 shape = SubResource( 1 )
