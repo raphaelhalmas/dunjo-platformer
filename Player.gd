@@ -58,9 +58,9 @@ func _process(delta):
 			
 		PlayerState.LAND:
 #			print("fell: %f" % (global_position.y - last_y))
-#			So if only our dust timer is finished
-#			We are going to emit a particle
-#			if $DustTimer.is_stopped():
+##			So if only our dust timer is finished
+##			We are going to emit a particle
+#			if $DustTimer.is_stopped() && !$FootDust.emitting && velocity.y > 1:
 #				$FootDust.emitting = true
 ##				We want the dust timer
 ##				We want to start it
@@ -91,9 +91,12 @@ func _process(delta):
 #				we're gonna set him down further in basically 
 #				into past the one way collision 
 				elif $RayCast2D.is_colliding() && Input.is_action_pressed("Down"):
-					position = Vector2(position.x, position.y + 1)
 #					var collider = $RayCast2D.get_collider().get_node("OneWay")
 #					collider.disabled = true
+#					We want our character stick to the ladder 
+					var area = $RayCast2D.get_collider().get_node("Area2D")
+					global_position = Vector2(area.global_position.x, global_position.y + 2)
+					change_state(PlayerState.CLIMB)
 
 func _physics_process(delta):
 	if state != PlayerState.CLIMB:
