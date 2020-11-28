@@ -34,6 +34,8 @@ func _process(delta):
 		
 	match state:
 		PlayerState.CLIMB:
+#			if $RayCast2D.is_colliding() && Input.is_action_pressed("Up"):
+#				position = Vector2(position.x, position.y - 5)			
 			climb()
 #			That way you can get off of any vine or ladder that touches the ground
 #			I just want to make sure that we come off like that
@@ -84,6 +86,14 @@ func _process(delta):
 					if velocity.y < 0:
 #						global_position.x = last_climbable_x
 						change_state(PlayerState.CLIMB)
+#				If you're colliding with the raycast and
+#				you just press the down button
+#				we're gonna set him down further in basically 
+#				into past the one way collision 
+				elif $RayCast2D.is_colliding() && Input.is_action_pressed("Down"):
+					position = Vector2(position.x, position.y + 1)
+#					var collider = $RayCast2D.get_collider().get_node("OneWay")
+#					collider.disabled = true
 
 func _physics_process(delta):
 	if state != PlayerState.CLIMB:

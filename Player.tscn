@@ -8,7 +8,7 @@
 radius = 3.64892
 height = 0.0
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 length = 2.0
 loop = true
 tracks/0/type = "value"
@@ -28,7 +28,7 @@ tracks/1/path = NodePath("Sprite:scale")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
-tracks/1/enabled = true
+tracks/1/enabled = false
 tracks/1/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
@@ -36,7 +36,7 @@ tracks/1/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 0.85, 1.14 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=3]
 length = 0.3
 loop = true
 tracks/0/type = "value"
@@ -64,7 +64,7 @@ tracks/1/keys = {
 "values": [ Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 length = 0.4
 loop = true
 tracks/0/type = "value"
@@ -94,7 +94,7 @@ tracks/1/keys = {
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
-collision_mask = 61
+collision_mask = 29
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -110,11 +110,16 @@ frame = 2
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 autoplay = "Idle"
-anims/Idle = SubResource( 4 )
-anims/Jump = SubResource( 5 )
-anims/Walk = SubResource( 6 )
+anims/Idle = SubResource( 2 )
+anims/Jump = SubResource( 3 )
+anims/Walk = SubResource( 4 )
 
 [node name="DustTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="FootDust" parent="." instance=ExtResource( 3 )]
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 0, 1 )
+collision_mask = 64

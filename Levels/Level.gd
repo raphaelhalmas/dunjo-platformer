@@ -36,7 +36,7 @@ func setup_tiles():
 			LADDER:
 				create_instance_from_tilemap(cell, ladder, $Interactables, Vector2(6, 6))
 			LADDER_TOP:
-				create_instance_from_tilemap(cell, ladder, $Interactables, Vector2(6, 6))				
+				create_instance_from_tilemap(cell, ladder_top, $Interactables, Vector2(6, 6))				
 			PLAYER:
 				create_instance_from_tilemap(cell, player, self, Vector2(6, 12))
 				
