@@ -34,3 +34,6 @@ func _on_pickup(item):
 #	print(item.name)
 	if item.name == "Key":
 		get_tree().call_group("triggerable", "trigger", "Door")
+		
+func _computer_on():
+	print("Computer on")
