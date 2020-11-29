@@ -8,4 +8,5 @@ func _on_triggered():
 func _on_player_entered(_body):
 	if !is_on:
 		is_on = true
+		$Sprite.frame += 1
 		get_tree().call_group("game", "_computer_on")

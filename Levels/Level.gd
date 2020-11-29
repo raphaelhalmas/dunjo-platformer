@@ -1,5 +1,6 @@
 extends Node2D
 
+const BLOCK := 9
 const CHAIN := 11
 const COIN := 7
 const COMPUTER := 14
@@ -7,6 +8,7 @@ const DOOR := 4
 const KEY := 2
 const LADDER := 12
 const LADDER_TOP := 13
+const OUTLINED_BLOCK := 8
 const PLAYER := 5
 
 export (PackedScene) var chain
@@ -52,3 +54,11 @@ func create_instance_from_tilemap(coord:Vector2, prefab:PackedScene, parent:Node
 	var pf = prefab.instance()
 	pf.position = $TileMap.map_to_world(coord) + offset
 	parent.add_child(pf)
+
+func replace_tiles(old_tile_index:int, new_tile_index:int):
+	var cells = $TileMap.get_used_cells_by_id(old_tile_index)
+	for cell in cells:
+		$TileMap.set_cell(cell.x, cell.y, new_tile_index)		
+
+
+

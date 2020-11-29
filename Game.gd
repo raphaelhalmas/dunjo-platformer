@@ -14,10 +14,10 @@ func init():
 	
 func load_level(level_number:int):
 	var root = get_tree().root
-	if root.has_node("Level1"):
-		var node = root.get_node("Level1")
-		root.remove_child(node)
-		node.queue_free()
+	var old_level = get_current_level_node()
+	if old_level != null:
+		root.remove_child(old_level)
+		old_level.queue_free()
 		
 	#TODO: Check if level exists 
 	var level = load(LVL_PATH % level_number).instance()
@@ -35,5 +35,14 @@ func _on_pickup(item):
 	if item.name == "Key":
 		get_tree().call_group("triggerable", "trigger", "Door")
 		
+func get_current_level_node():
+	var root = get_tree().root
+	if root.has_node("Level"):
+		return root.get_node("Level")
+	return null
+		
 func _computer_on():
-	print("Computer on")
+#	print("Computer on")
+	var level = get_current_level_node()
+	if level != null:
+		level.replace_tiles(level.BLOCK, level.OUTLINED_BLOCK)
