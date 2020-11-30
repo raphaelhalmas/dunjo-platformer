@@ -45,4 +45,10 @@ func _computer_on():
 #	print("Computer on")
 	var level = get_current_level_node()
 	if level != null:
-		level.replace_tiles(level.BLOCK, level.OUTLINED_BLOCK)
+		level.replace_tiles(level.BLOCK, -1)
+		if !$GateOpening.playing:
+			$GateOpening.play()
+
+
+
+

@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
+[ext_resource path="res://SFX/Ambience.wav" type="AudioStream" id=2]
+[ext_resource path="res://SFX/GateOpening.wav" type="AudioStream" id=3]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -16,3 +18,10 @@ __meta__ = {
 [node name="Camera" type="Camera2D" parent="."]
 offset = Vector2( 162, 84 )
 current = true
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+autoplay = true
+
+[node name="GateOpening" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )

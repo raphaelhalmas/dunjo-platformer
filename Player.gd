@@ -104,15 +104,21 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP, true)
 
 func horizontal():
-	if Input.is_action_pressed("Left"):
-		velocity.x = -speed
-		$Sprite.flip_h = true
-	elif Input.is_action_pressed("Right"):
-		velocity.x = speed
-		$Sprite.flip_h = false
-	else: 
-		velocity.x = 0
+#	if Input.is_action_pressed("Left"):
+#		velocity.x = -speed
+#		$Sprite.flip_h = true
+#	elif Input.is_action_pressed("Right"):
+#		velocity.x = speed
+#		$Sprite.flip_h = false
+#	else: 
+#		velocity.x = 0
 		
+	var action_strength = Input.get_action_strength("Right") - 	Input.get_action_strength("Left")
+	velocity.x = action_strength * speed
+
+	if action_strength != 0:
+		$Sprite.flip_h = action_strength < 0
+
 	if is_on_floor():
 		if velocity.x == 0:
 			$Animation.play("Idle")
@@ -203,3 +209,10 @@ func on_interact_exited(obj_pos: Vector2, type):
 		if climbables == 0 && state == PlayerState.CLIMB:
 			$Animation.play("Idle")
 			change_state(PlayerState.FALL)
+			
+func on_jump_sfx():
+	if !$Jump.playing:
+		$Jump.play()
+	
+	
+	

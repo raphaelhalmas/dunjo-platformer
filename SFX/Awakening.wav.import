@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Awakening.wav-eef60d1fd6d4743f12efd7df4bdf8645.sample"
+
+[deps]
+
+source_file="res://SFX/Awakening.wav"
+dest_files=[ "res://.import/Awakening.wav-eef60d1fd6d4743f12efd7df4bdf8645.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0
