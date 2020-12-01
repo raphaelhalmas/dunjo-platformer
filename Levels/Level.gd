@@ -52,11 +52,13 @@ func create_instance_from_tilemap(coord:Vector2, prefab:PackedScene, parent:Node
 	$TileMap.set_cell(coord.x, coord.y, -1)
 	
 	var pf = prefab.instance()
+	
 	pf.position = $TileMap.map_to_world(coord) + offset
 	parent.add_child(pf)
 
 func replace_tiles(old_tile_index:int, new_tile_index:int):
 	var cells = $TileMap.get_used_cells_by_id(old_tile_index)
+	
 	for cell in cells:
 		$TileMap.set_cell(cell.x, cell.y, new_tile_index)
 				

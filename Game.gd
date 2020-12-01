@@ -15,14 +15,20 @@ func init():
 func load_level(level_number:int):
 	var root = get_tree().root
 	var old_level = get_current_level_node()
+
 	if old_level != null:
 		root.remove_child(old_level)
 		old_level.queue_free()
 		
-	#TODO: Check if level exists 
-	var level = load(LVL_PATH % level_number).instance()
-	root.add_child(level)
-	return true
+	var resource = load(LVL_PATH % level_number)
+
+	if resource != null:
+		var level = resource.instance()
+		root.add_child(level)
+		return true
+	else:
+		print("%s does not exist! TODO: Win Game!" % [LVL_PATH % level_number])
+		return false
 
 # Game group functions
 func _on_next_level():
@@ -37,6 +43,7 @@ func _on_pickup(item):
 		
 func get_current_level_node():
 	var root = get_tree().root
+	
 	if root.has_node("Level"):
 		return root.get_node("Level")
 	return null
@@ -44,10 +51,14 @@ func get_current_level_node():
 func _computer_on():
 #	print("Computer on")
 	var level = get_current_level_node()
-	if level != null:
-		level.replace_tiles(level.BLOCK, -1)
+	
+	if level != null:		
 		if !$GateOpening.playing:
 			$GateOpening.play()
+#			get_tree().paused = true
+			yield(get_tree().create_timer(0.25), "timeout")
+#			get_tree().paused = false
+			level.replace_tiles(level.BLOCK, -1)
 
 
 

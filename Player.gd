@@ -51,6 +51,7 @@ func _process(delta):
 			elif fall_time <= MIN_FALL_JUMP_TIME:
 				air_jumps = max_air_jumps
 				jump()
+				
 			fall_time += delta
 			
 		PlayerState.JUMP:
@@ -101,6 +102,7 @@ func _process(delta):
 func _physics_process(delta):
 	if state != PlayerState.CLIMB:
 		velocity.y += GRAVITY * delta
+		
 	velocity = move_and_slide(velocity, Vector2.UP, true)
 
 func horizontal():
@@ -172,10 +174,12 @@ func jump():
 func climb():
 	velocity.x = 0
 	vertical()
+	
 	if Input.is_action_just_pressed("Jump"):
 		air_jumps = max_air_jumps
 		horizontal()
 		change_state(PlayerState.JUMP)
+		
 		if velocity.x != 0:
 			jump()	
 
